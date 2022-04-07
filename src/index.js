@@ -3,18 +3,33 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
+  // replacing parent value prop with constructor state value
+  constructor(props){
+    super(props);
+    this.state = {
+      value: null,
+    };
+  }
+
   render() {
     return (
-      <button className="square">
-        {/* TODO */}
-      </button>
+      // <button className="square" onClick={function() {console.log('clicked'); }}>
+      // <button className="square" onClick={()=> console.log('clicked')}> ** arrow func syntax
+      <button
+        // readability** best prac
+        className="square" 
+        onClick={()=> this.setState({value: 'X'})}
+        >
+        {this.state.value}
+        {/* {this.props.value} */}
+      </button> // this.prop passed from 'Board' component below, hoisted to child 'Square' component
     );
   }
 }
 
 class Board extends React.Component {
   renderSquare(i) {
-    return <Square value />;
+    return <Square value={i} />; // value is a "Prop" (property)
   }
 
   render() {
