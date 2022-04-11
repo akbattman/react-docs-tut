@@ -51,7 +51,7 @@ const Square = (props)=> {
   return (
     <button
       className='square'
-      onClick={props.onClick}
+      onClick={props.onClick} // NB. shortened bracket req' syntax without this. 
     >
       {props.value}
     </button>
@@ -71,6 +71,9 @@ class Board extends React.Component {
   // on click handler method
   handleClick(i) {
     const squares = this.state.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
     squares[i] = this.state.xIsNext ? 'X' : 'O'; // ternary reading boo val on prop
     this.setState({
       squares: squares,
@@ -90,9 +93,16 @@ class Board extends React.Component {
   }
 
   render() {
-    // const status = 'Next player: X';
-    // const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O'); // tut docs ternary reading boo val on prop
-    const status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`; // personal pref' for interp' over concat'
+    const winner = calculateWinner(this.state.squares);
+    let status;
+    if (winner) {
+      // status = 'Winner: ' + winner; // personal pref' for interp' over concat'
+      status = `Winner: ${winner}`
+    } else {
+      // const status = 'Next player: X';
+      // const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O'); // tut docs ternary reading boo val on prop
+      status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`; // personal pref' for interp' over concat'
+    }
 
     return (
       <div>
@@ -140,3 +150,24 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+//helper func
+function calculateWinner(squares) { // old syntax readable pre-initialization ?? ##REVISE##
+// const calculateWinner = (squares)=> { // arrow syntax cannot be accessed before initialization Board.render  ##bc func is const?##
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
