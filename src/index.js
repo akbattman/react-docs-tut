@@ -60,53 +60,57 @@ const Square = (props)=> {
 
 
 class Board extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      squares: Array(9).fill(null), // initial board state to lift child state and pass back props
-      xIsNext: true, // player turn boolean state
-    };
-  }
+
+  // ## replaced in game class for full control and history implementation
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     squares: Array(9).fill(null), // initial board state to lift child state and pass back props
+  //     xIsNext: true, // player turn boolean state
+  //   };
+  // }
 
   // on click handler method
-  handleClick(i) {
-    const squares = this.state.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
-      return;
-    }
-    squares[i] = this.state.xIsNext ? 'X' : 'O'; // ternary reading boo val on prop
-    this.setState({
-      squares: squares,
-      xIsNext : !this.state.xIsNext, //flip boolean value with click
-    });
-  }
+  // handleClick(i) {
+  //   const squares = this.state.squares.slice();
+  //   if (calculateWinner(squares) || squares[i]) {
+  //     return;
+  //   }
+  //   squares[i] = this.state.xIsNext ? 'X' : 'O'; // ternary reading boo val on prop
+  //   this.setState({
+  //     squares: squares,
+  //     xIsNext : !this.state.xIsNext, //flip boolean value with click
+  //   });
+  // }
 
   renderSquare(i) {
     // return <Square value={i} />; // value is a "Prop" (property)
     // return <Square value={this.state.squares[i]} />; // modified for prop passing from squares state
     return (
       <Square 
-        value={this.state.squares[i]}
-        onClick={()=> this.handleClick(i)}
+        // value={this.state.squares[i]} 
+        value={this.props.squares[i]}
+        // onClick={()=> this.handleClick(i)}
+        onClick={()=> this.props.onClick(i)}
       />
     );
   }
 
   render() {
-    const winner = calculateWinner(this.state.squares);
-    let status;
-    if (winner) {
-      // status = 'Winner: ' + winner; // personal pref' for interp' over concat'
-      status = `Winner: ${winner}`
-    } else {
-      // const status = 'Next player: X';
-      // const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O'); // tut docs ternary reading boo val on prop
-      status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`; // personal pref' for interp' over concat'
-    }
+    // const winner = calculateWinner(this.state.squares);
+    // let status;
+    // if (winner) {
+    //   // status = 'Winner: ' + winner; // personal pref' for interp' over concat'
+    //   status = `Winner: ${winner}`
+    // } else {
+    //   // const status = 'Next player: X';
+    //   // const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O'); // tut docs ternary reading boo val on prop
+    //   status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`; // personal pref' for interp' over concat'
+    // }
 
     return (
       <div>
-        <div className="status">{status}</div>
+        {/* <div className="status">{status}</div> */}
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -128,14 +132,57 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+  // new constructor to give game control of the board
+  constructor(props) {
+    super(props);
+    this.state = {
+      history: [{
+        squares: Array(9).fill(null)
+      }],
+      xIsNext: true,
+    };
+  }
+
+  handleClick(i) {
+    const history = this.state.history;
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    squares[i] = this.state.xIsNext ? 'X' : 'O'; // ternary reading boo val on prop
+    this.setState({
+      history: history.concat([{
+        squares: squares
+      }]),
+      xIsNext : !this.state.xIsNext, //flip boolean value with click
+    });
+  }
+
   render() {
+    const history = this.state.history;
+    const current = history[history.length - 1];
+    const winner = calculateWinner(current.squares);
+    let status;
+    if (winner) {
+      // status = 'Winner: ' + winner; // personal pref' for interp' over concat'
+      status = `Winner: ${winner}`
+    } else {
+      // const status = 'Next player: X';
+      // const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O'); // tut docs ternary reading boo val on prop
+      status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`; // personal pref' for interp' over concat'
+    }
+
     return (
       <div className="game">
         <div className="game-board">
-          <Board />
+          <Board
+            squares={current.squares}
+            onClick={(i)=> this.handleClick(i)}
+          />
         </div>
         <div className="game-info">
-          <div>{/* status */}</div>
+          <div>{status}</div>
           <ol>{/* TODO */}</ol>
         </div>
       </div>
@@ -152,7 +199,7 @@ ReactDOM.render(
 
 //helper func
 function calculateWinner(squares) { // old syntax readable pre-initialization ?? ##REVISE##
-// const calculateWinner = (squares)=> { // arrow syntax cannot be accessed before initialization Board.render  ##bc func is const?##
+// const calculateWinner = (squares)=> { // arrow syntax cannot be accessed before initialization Board.render(line 96)  ##bc func is const?##
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
