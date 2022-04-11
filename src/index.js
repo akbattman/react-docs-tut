@@ -36,7 +36,8 @@ import './index.css';
 
 //###########################################################################
 
-// ## tut docs example
+// ## tut docs example - named function
+
 // function Square(props) {
 //   return (
 //     <button className="square" onClick={props.onClick}>
@@ -45,7 +46,7 @@ import './index.css';
 //   );
 // }
 
-// modern syn && readability
+// personal pref for arrow syntax(more modern) && readability new lines
 const Square = (props)=> {
   return (
     <button
@@ -63,14 +64,18 @@ class Board extends React.Component {
     super(props);
     this.state = {
       squares: Array(9).fill(null), // initial board state to lift child state and pass back props
+      xIsNext: true, // player turn boolean state
     };
   }
 
   // on click handler method
   handleClick(i) {
     const squares = this.state.squares.slice();
-    squares[i] = 'X';
-    this.setState({squares: squares});
+    squares[i] = this.state.xIsNext ? 'X' : 'O'; // ternary reading boo val on prop
+    this.setState({
+      squares: squares,
+      xIsNext : !this.state.xIsNext, //flip boolean value with click
+    });
   }
 
   renderSquare(i) {
@@ -85,7 +90,9 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: X';
+    // const status = 'Next player: X';
+    // const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O'); // tut docs ternary reading boo val on prop
+    const status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`; // personal pref' for interp' over concat'
 
     return (
       <div>
