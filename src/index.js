@@ -2,33 +2,61 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-class Square extends React.Component {
-  // replacing parent value prop with constructor state value
+//###########################################################################
+// Square class change to Function Component as only containing render method
+//###########################################################################
 
-  // construcor re-replaced with prop-pass from board game state
-  // constructor(props){
-  //   super(props);
-  //   this.state = {
-  //     value: null,
-  //   };
-  // }
+// class Square extends React.Component {
+//   // replacing parent value prop with constructor state value
 
-  render() {
-    return (
-      // <button className="square" onClick={function() {console.log('clicked'); }}>
-      // <button className="square" onClick={()=> console.log('clicked')}> ** arrow func syntax
-      <button
-        // readability** best prac - line by line
-        className="square" 
-        // onClick={()=> this.setState({value: 'X'})}
-        onClick={()=> this.props.onClick()}
-        >
-        {this.props.value}
-        {/* {this.state.value} */}
-      </button> // this.prop passed from 'Board' component below, hoisted to child 'Square' component
-    );
-  }
+//   // construcor re-replaced with prop-pass from board game state
+//   // constructor(props){
+//   //   super(props);
+//   //   this.state = {
+//   //     value: null,
+//   //   };
+//   // }
+
+//   render() {
+//     return (
+//       // <button className="square" onClick={function() {console.log('clicked'); }}>
+//       // <button className="square" onClick={()=> console.log('clicked')}> ** arrow func syntax
+//       <button
+//         // readability** best prac - line by line
+//         className="square" 
+//         // onClick={()=> this.setState({value: 'X'})}
+//         onClick={()=> this.props.onClick()}
+//         >
+//         {this.props.value}
+//         {/* {this.state.value} */}
+//       </button> // this.prop passed from 'Board' component below, hoisted to child 'Square' component
+//     );
+//   }
+// }
+
+//###########################################################################
+
+// ## tut docs example
+// function Square(props) {
+//   return (
+//     <button className="square" onClick={props.onClick}>
+//       {props.value}
+//     </button>
+//   );
+// }
+
+// modern syn && readability
+const Square = (props)=> {
+  return (
+    <button
+      className='square'
+      onClick={props.onClick}
+    >
+      {props.value}
+    </button>
+  );
 }
+
 
 class Board extends React.Component {
   constructor(props) {
