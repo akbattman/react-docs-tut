@@ -4,12 +4,14 @@ import './index.css';
 
 class Square extends React.Component {
   // replacing parent value prop with constructor state value
-  constructor(props){
-    super(props);
-    this.state = {
-      value: null,
-    };
-  }
+
+  // construcor re-replaced with prop-pass from board game state
+  // constructor(props){
+  //   super(props);
+  //   this.state = {
+  //     value: null,
+  //   };
+  // }
 
   render() {
     return (
@@ -18,10 +20,11 @@ class Square extends React.Component {
       <button
         // readability** best prac - line by line
         className="square" 
-        onClick={()=> this.setState({value: 'X'})}
+        // onClick={()=> this.setState({value: 'X'})}
+        onClick={()=> this.props.onClick()}
         >
-        {this.state.value}
-        {/* {this.props.value} */}
+        {this.props.value}
+        {/* {this.state.value} */}
       </button> // this.prop passed from 'Board' component below, hoisted to child 'Square' component
     );
   }
@@ -35,10 +38,22 @@ class Board extends React.Component {
     };
   }
 
+  // on click handler method
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({squares: squares});
+  }
+
   renderSquare(i) {
     // return <Square value={i} />; // value is a "Prop" (property)
-    return <Square value={this.state.squares[i]} />; // modified for prop passing from squares state
-
+    // return <Square value={this.state.squares[i]} />; // modified for prop passing from squares state
+    return (
+      <Square 
+        value={this.state.squares[i]}
+        onclick={()=> this.handleClick(i)}
+      />
+    );
   }
 
   render() {
