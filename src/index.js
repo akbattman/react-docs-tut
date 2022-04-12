@@ -1,5 +1,5 @@
 import React from 'react';
-// import ReactDOM from 'react-dom'; // depreceated
+// import ReactDOM from 'react-dom'; // deprecated
 import { createRoot } from 'react-dom/client'; // react v18 pref
 import './index.css';
 
@@ -216,7 +216,7 @@ class Game extends React.Component {
 
 // ========================================
 
-// // ## depreceated <18 - will behave as 17
+// // ## deprecated <18 - will behave as 17
 // ReactDOM.render(
 //   <Game />,
 //   document.getElementById('root')
