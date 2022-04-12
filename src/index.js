@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom'; // depreceated
+import { createRoot } from 'react-dom/client'; // react v18 pref
 import './index.css';
 
 //###########################################################################
@@ -215,10 +216,18 @@ class Game extends React.Component {
 
 // ========================================
 
-ReactDOM.render(
-  <Game />,
-  document.getElementById('root')
-);
+// // ## depreceated <18 - will behave as 17
+// ReactDOM.render(
+//   <Game />,
+//   document.getElementById('root')
+// );
+// ##
+
+// ## react >v18 syntax
+// const contain = document.querySelector('body'); // strongly discouraged
+const contain = document.getElementById('root'); // would be a APP container in a working production
+const root = createRoot(contain);
+root.render(<Game />);
 
 //helper func
 function calculateWinner(squares) { // old syntax readable pre-initialization ?? ##REVISE##
