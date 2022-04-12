@@ -145,7 +145,8 @@ class Game extends React.Component {
   }
 
   handleClick(i) {
-    const history = this.state.history;
+    // const history = this.state.history;
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
@@ -156,13 +157,22 @@ class Game extends React.Component {
       history: history.concat([{
         squares: squares
       }]),
-      xIsNext : !this.state.xIsNext, //flip boolean value with click
+      stepNumber: history.length, // update turn history count 
+      xIsNext: !this.state.xIsNext // flip boolean value with click
+    });
+  }
+
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: (step % 2) === 0 // decipher next turn with odd/even boolean
     });
   }
 
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
+    // const current = history[history.length - 1];
+    const current = history[this.state.stepNumber]; // index of move history array
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move)=> {
